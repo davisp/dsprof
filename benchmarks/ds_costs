@@ -47,7 +47,7 @@ main(_) ->
 
     lists:foreach(fun({Name, Func}) ->
         {Time, _} = timer:tc(Func, [iterations()]),
-        io:format("~7s: ~8b (ms)  ~16f (ms/call)~n",
+        io:format("~7s: ~8b (us)  ~16f (us/call)~n",
             [Name, Time, Time / iterations()])
     end, randomized(tests())).
 
