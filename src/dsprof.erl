@@ -4,7 +4,8 @@
 -export([
     direct/0,
     ds_cpu/0,
-    ds_io/0
+    ds_io/0,
+    via_thread/0
 ]).
 
 
@@ -18,6 +19,13 @@ ds_cpu() ->
 
 ds_io() ->
     not_loaded(?LINE).
+
+
+via_thread() ->
+    not_loaded(?LINE),
+    receive
+        Msg -> Msg
+    end.
 
 
 init() ->

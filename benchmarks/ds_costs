@@ -26,11 +26,18 @@ run_ds_io(Num) ->
     run_ds_io(Num - 1).
 
 
+run_via_thread(0) ->
+    ok;
+run_via_thread(Num) ->
+    ok = dsprof:via_thread(),
+    run_via_thread(Num - 1).
+
 tests() ->
     [
         {"Direct", fun run_direct/1},
         {"DS CPU", fun run_ds_cpu/1},
-        {"DS IO", fun run_ds_io/1}
+        {"DS IO", fun run_ds_io/1},
+        {"Threaded", fun run_via_thread/1}
     ].
 
 
@@ -47,7 +54,7 @@ main(_) ->
 
     lists:foreach(fun({Name, Func}) ->
         {Time, _} = timer:tc(Func, [iterations()]),
-        io:format("~7s: ~8b (us)  ~16f (us/call)~n",
+        io:format("~10s: ~8b (us)  ~16f (us/call)~n",
             [Name, Time, Time / iterations()])
     end, randomized(tests())).
 
