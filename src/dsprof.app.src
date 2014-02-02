@@ -1,0 +1,7 @@
+{application, dsprof, [
+    {description, "Basic profiling of dirty schedulers."},
+    {vsn, git},
+    {registered, []},
+    {applications, [kernel, stdlib]},
+    {env, []}
+]}.
