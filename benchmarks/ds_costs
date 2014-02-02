@@ -1,0 +1,53 @@
+#!/usr/bin/env escript
+-mode(compile).
+
+
+iterations() -> 50000.
+
+
+run_direct(0) ->
+    ok;
+run_direct(Num) ->
+    ok = dsprof:direct(),
+    run_direct(Num - 1).
+
+
+run_ds_cpu(0) ->
+    ok;
+run_ds_cpu(Num) ->
+    ok = dsprof:ds_cpu(),
+    run_ds_cpu(Num - 1).
+
+
+run_ds_io(0) ->
+    ok;
+run_ds_io(Num) ->
+    ok = dsprof:ds_io(),
+    run_ds_io(Num - 1).
+
+
+tests() ->
+    [
+        {"Direct", fun run_direct/1},
+        {"DS CPU", fun run_ds_cpu/1},
+        {"DS IO", fun run_ds_io/1}
+    ].
+
+
+randomized(List) ->
+    random:seed(now()),
+    Tagged = [{random:uniform(), Item} || Item <- List],
+    Sorted = lists:sort(Tagged),
+    [Item || {_, Item} <- Sorted].
+
+
+main(_) ->
+    code:add_path("./ebin/"),
+    timer:sleep(1000),
+
+    lists:foreach(fun({Name, Func}) ->
+        {Time, _} = timer:tc(Func, [iterations()]),
+        io:format("~7s: ~8b (ms)  ~16f (ms/call)~n",
+            [Name, Time, Time / iterations()])
+    end, randomized(tests())).
+
